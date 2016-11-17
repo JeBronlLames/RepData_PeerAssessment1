@@ -22,7 +22,7 @@ The variables included in this dataset are:
 
 ##Loading and preprocessing the data
 
-```{r load_data, echo = TRUE, results = "hide", warning = FALSE, message = FALSE}
+```r 
 library(data.table)
 library(dplyr)
 library(lubridate)
@@ -38,7 +38,7 @@ activity <- transform(act_comp, date = ymd(act_comp$date))
 ```
 
 ## What is mean total number of steps taken per day?
-```{r mean_data, echo = TRUE}
+```r
 ## 1 ## Cutting data into buckets by day and taking sums
 stepsum <- aggregate(steps ~ date, data = activity, FUN = sum)
 ## 2 ## Generating a histogram of the total number of steps taken each day
@@ -51,7 +51,7 @@ The mean is `r stepmean`, and the median is `r stepmedian`.
 
 
 ## What is the average daily activity pattern?
-```{r daily_activity, echo = TRUE}
+```r
 ## 1 ## Time series plot of the average number of steps taken
 int_mean <- aggregate(steps ~ interval, data = activity, FUN = mean)
 
@@ -67,7 +67,7 @@ The max interval and value are `r maxstep`.
 
 
 ## Imputing missing values
-``` {r impute_data, echo = TRUE}
+```r 
 ## 1 ## Calculating count of NA values
 stepNA <- sum(is.na(act$steps)) # ALL NA ARE FOUND IN "steps" COLUMN
 dateNA <- sum(is.na(act$date))
@@ -104,7 +104,7 @@ original mean and median of `stepmean` and `stepmedian`.
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-```{r weekday_weekend, echo = TRUE}
+```r
 ## 1 ## New dataframe including factor variable for c("weekday", "weekend")
 # Converting "date" to day of the week
 imp_act_date$day <- weekdays(imp_act_date$date)
