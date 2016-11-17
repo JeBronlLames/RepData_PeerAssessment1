@@ -1,13 +1,8 @@
----
-title: "PA1_template.Rmd"
-author: "Cody Hollohan"
-date: "November 15, 2016"
-output: html_document
----
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+PA1_template.Rmd
+Cody Hollohan
+November 15, 2016
+
 
 # Peer-graded Assignment: Course Project 1
 
