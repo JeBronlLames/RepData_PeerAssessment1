@@ -1,10 +1,6 @@
 
-PA1_template.Rmd
-Cody Hollohan
-November 15, 2016
-
-
-# Peer-graded Assignment: Course Project 1
+Peer-graded Assignment: Course Project 1
+========================================
 
 It is now possible to collect a large amount of data about personal movement using activity monitoring devices such as a Fitbit, Nike Fuelband, or Jawbone Up. These type of devices are part of the "quantified self" movement - a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. But these data remain under-utilized both because the raw data are hard to obtain and there is a lack of statistical methods and software for processing and interpreting the data.
 
@@ -12,62 +8,77 @@ This assignment makes use of data from a personal activity monitoring device. Th
 
 The data for this assignment can be downloaded from the course web site:
 
-Dataset: Activity monitoring data [52K]
-The variables included in this dataset are:
+Dataset: Activity monitoring data The variables included in this dataset are:
 
-- steps: Number of steps taking in a 5-minute interval (missing values are coded as NA)
-- date: The date on which the measurement was taken in YYYY-MM-DD format
-- interval: Identifier for the 5-minute interval in which measurement was taken
+-   steps: Number of steps taking in a 5-minute interval (missing values are coded as NA)
+-   date: The date on which the measurement was taken in YYYY-MM-DD format
+-   interval: Identifier for the 5-minute interval in which measurement was taken
 
+Loading and preprocessing the data
+----------------------------------
 
-##Loading and preprocessing the data
-
-```r 
+``` r
 library(data.table)
 library(dplyr)
 library(lubridate)
 library(ggplot2)
 library(RColorBrewer)
 
+getwd()
 ## 1 ## Reading data
-act <- read.csv("activity.csv")
+act <- read.csv("/Users/codyhollohan/Desktop/R Files/5 - Reproducible Research/activity.csv")
 ## 2 ## Filtering for non-NA values only
 act_comp <- act[complete.cases(act),]
         # Converting "date" to 'date-time' class
 activity <- transform(act_comp, date = ymd(act_comp$date))
 ```
 
-## What is mean total number of steps taken per day?
-```r
+What is mean total number of steps taken per day?
+-------------------------------------------------
+
+``` r
 ## 1 ## Cutting data into buckets by day and taking sums
 stepsum <- aggregate(steps ~ date, data = activity, FUN = sum)
 ## 2 ## Generating a histogram of the total number of steps taken each day
 hist(stepsum$steps, breaks = 30)
+```
+
+![](PA1_template_files/figure-markdown_github/mean_data-1.png)
+
+``` r
 ## 3 ## Mean and Median calculations for number of steps taken each day
 stepmean <- mean(stepsum$steps)
 stepmedian <- median(stepsum$steps)
 ```
-The mean is `r stepmean`, and the median is `r stepmedian`.
 
+The mean is 1.076618910^{4}, and the median is 10765.
 
-## What is the average daily activity pattern?
-```r
+What is the average daily activity pattern?
+-------------------------------------------
+
+``` r
 ## 1 ## Time series plot of the average number of steps taken
 int_mean <- aggregate(steps ~ interval, data = activity, FUN = mean)
 
 plot(int_mean, type = "l", col = "blue", lwd = 3, 
      main = "Time Series Plot Of Average Number Of Steps Per Interval", 
      xlab = "Interval", ylab = "Step Count")
+```
+
+![](PA1_template_files/figure-markdown_github/daily_activity-1.png)
+
+``` r
 ## 2 ## The 5-minute interval that, on average, contains the max number of steps
 maxindex <- which.max(int_mean$steps)
 maxstep <- int_mean[104,]
 ```
 
-The max interval and value are `r maxstep`.
+The max interval and value are 835, 206.1698113.
 
+Imputing missing values
+-----------------------
 
-## Imputing missing values
-```r 
+``` r
 ## 1 ## Calculating count of NA values
 stepNA <- sum(is.na(act$steps)) # ALL NA ARE FOUND IN "steps" COLUMN
 dateNA <- sum(is.na(act$date))
@@ -93,18 +104,22 @@ imp_act_date <- transform(imp_act, date = ymd(imp_act$date))
 imp_stepsum <- aggregate(imp_steps ~ date, data = imp_act_date, FUN = sum)
 # Generating a histogram of the total number of steps taken each day
 hist(imp_stepsum$imp_steps, breaks = 30)
+```
+
+![](PA1_template_files/figure-markdown_github/impute_data-1.png)
+
+``` r
 # Mean and Median calculations for number of steps taken each day
 imp_stepmean <- mean(imp_stepsum$imp_steps)
 imp_stepmedian <- median(imp_stepsum$imp_steps)
 ```
 
-The imputed mean and median are `r imp_stepmean`, and `r imp_stepmedian`. Consider this in comparison to the
-original mean and median of `stepmean` and `stepmedian`.
+The imputed mean and median are 1.076618910^{4}, and 1.076618910^{4}. Consider this in comparison to the original mean and median of `stepmean` and `stepmedian`.
 
+Are there differences in activity patterns between weekdays and weekends?
+-------------------------------------------------------------------------
 
-## Are there differences in activity patterns between weekdays and weekends?
-
-```r
+``` r
 ## 1 ## New dataframe including factor variable for c("weekday", "weekend")
 # Converting "date" to day of the week
 imp_act_date$day <- weekdays(imp_act_date$date)
@@ -131,11 +146,7 @@ plot(int_mean_we, type = "l", col = palette()[2], lwd = 3,
      xlab = "Interval", ylab = "Step Count")
 ```
 
-
-
-
+![](PA1_template_files/figure-markdown_github/weekday_weekend-1.png)
 
 Word.
-
-
 
